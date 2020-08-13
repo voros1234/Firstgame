@@ -1,4 +1,4 @@
-class Player(object):
+class player(object):
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -10,16 +10,21 @@ class Player(object):
         self.left = False
         self.right = False
         self.walkCount = 0
+        self.standing = True
 
     def draw(self, win, walkRight, walkLeft, char):
         if self.walkCount + 1 >= 27:
             self.walkCount = 0
 
-        if self.left:
-            win.blit(walkLeft[self.walkCount//3], (round(self.x), round(self.y)))
-            self.walkCount += 1
-        elif self.right:
-            win.blit(walkRight[self.walkCount//3], (round(self.x), round(self.y)))
-            self.walkCount += 1
+        if not(self.standing):
+            if self.left:
+                win.blit(walkLeft[self.walkCount//3], (round(self.x), round(self.y)))
+                self.walkCount += 1
+            elif self.right:
+                win.blit(walkRight[self.walkCount//3], (round(self.x), round(self.y)))
+                self.walkCount += 1
         else:
-            win.blit(char, (round(self.x), round(self.y)))    
+            if self.right:
+                win.blit(walkRight[0], (self.x, self.y))
+            else:
+                win.blit(walkLeft[0], (self.x, self.y))

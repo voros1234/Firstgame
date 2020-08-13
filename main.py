@@ -2,7 +2,8 @@
  Pygame modul
 """
 import pygame
-from Player import Player
+from Player import player
+from Projectile import projectile
 
 #Init pygame
 pygame.init()
@@ -21,12 +22,15 @@ clock = pygame.time.Clock()
 def redrawGameWindow():
     win.blit(bg, (0,0))
     man.draw(win, walkRight, walkLeft, char)
+    for bullet in bullets:
+        bullet.draw(win)
     pygame.display.update()
 
-man = Player(300, 410, 64, 64)
+man = player(300, 410, 64, 64)
 
 #Game loop
 running = True
+bullets = []
 while running:
     clock.tick(27)
 
@@ -36,24 +40,39 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    for bullet in bullets:
+        if bullet.x < 500 and bullet.x > 0:
+            bullet.x += bullet.vel
+        else:
+            bullets.pop(bullets.index(bullet))
+
     keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_SPACE]:
+        if man.left:
+            facing = -1
+        else:
+            facing = 1
+        if len(bullets) < 5:
+            bullets.append(projectile(round(man.x, man.width //2), round(man.y, man.height //2), 6, (0,0,0), facing))
 
     #Moves
     if keys[pygame.K_LEFT] and man.x > man.vel:
         man.x -= man.vel
         man.left = True
         man.right = False
+        man.standing = False
     elif keys[pygame.K_RIGHT] and man.x < 500 - man.width - man.vel:
         man.right = True
         man.left = False
         man.x += man.vel
+        man.standing = False
     else:
-        man.right = False
-        man.left = False
         man.walkCount = 0
+        man.standing = True
 
     if not(man.isJump):
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_UP]:
             man.isJump = True
             man.right = False
             man.left = False
