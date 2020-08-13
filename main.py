@@ -2,6 +2,7 @@
  Pygame modul
 """
 import pygame
+from Player import Player
 
 #Init pygame
 pygame.init()
@@ -17,34 +18,12 @@ char = pygame.image.load('images/standing.png')
 
 clock = pygame.time.Clock()
 
-x = 50
-y = 400
-width = 64
-height = 64
-vel = 5
-isJump = False
-jumpCount = 10
-left = False
-right = False
-walkCount = 0
-
 def redrawGameWindow():
-    global walkCount
     win.blit(bg, (0,0))
-
-    if walkCount + 1 >= 27:
-        walkCount = 0
-
-    if left:
-        win.blit(walkLeft[walkCount//3], (round(x), round(y)))
-        walkCount += 1
-    elif right:
-        win.blit(walkRight[walkCount//3], (round(x), round(y)))
-        walkCount += 1
-    else:
-        win.blit(char, (round(x), round(y)))    
-
+    man.draw(win, walkRight, walkLeft, char)
     pygame.display.update()
+
+man = Player(300, 410, 64, 64)
 
 #Game loop
 running = True
@@ -60,35 +39,35 @@ while running:
     keys = pygame.key.get_pressed()
 
     #Moves
-    if keys[pygame.K_LEFT] and x > vel:
-        x -= vel
-        left = True
-        right = False
-    elif keys[pygame.K_RIGHT] and x < 500 - width - vel:
-        right = True
-        left = False
-        x += vel
+    if keys[pygame.K_LEFT] and man.x > man.vel:
+        man.x -= man.vel
+        man.left = True
+        man.right = False
+    elif keys[pygame.K_RIGHT] and man.x < 500 - man.width - man.vel:
+        man.right = True
+        man.left = False
+        man.x += man.vel
     else:
-        right = False
-        left = False
-        walkCount = 0
+        man.right = False
+        man.left = False
+        man.walkCount = 0
 
-    if not(isJump):
+    if not(man.isJump):
         if keys[pygame.K_SPACE]:
-            isJump = True
-            right = False
-            left = False
-            walkCount = 0
+            man.isJump = True
+            man.right = False
+            man.left = False
+            man.walkCount = 0
     else:
-        if jumpCount >= -10:
+        if man.jumpCount >= -10:
             neg = 1
-            if jumpCount < 0:
+            if man.jumpCount < 0:
                 neg = -1
-            y -= (jumpCount ** 2) * 0.5 * neg
-            jumpCount -= 1
+            man.y -= (man.jumpCount ** 2) * 0.5 * neg
+            man.jumpCount -= 1
         else:
-            isJump = False
-            jumpCount = 10
+            man.isJump = False
+            man.jumpCount = 10
 
     #Draw Window
     redrawGameWindow()
