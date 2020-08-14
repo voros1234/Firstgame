@@ -3,6 +3,7 @@
 """
 import pygame
 from Player import player
+from Enemy import enemy
 from Projectile import projectile
 
 #Init pygame
@@ -22,12 +23,13 @@ clock = pygame.time.Clock()
 def redrawGameWindow():
     win.blit(bg, (0,0))
     man.draw(win, walkRight, walkLeft, char)
+    goblin.draw(win)
     for bullet in bullets:
         bullet.draw(win)
     pygame.display.update()
 
 man = player(300, 410, 64, 64)
-
+goblin = enemy(100, 410, 64, 64, 450)
 #Game loop
 running = True
 bullets = []
@@ -54,7 +56,7 @@ while running:
         else:
             facing = 1
         if len(bullets) < 5:
-            bullets.append(projectile(round(man.x, man.width //2), round(man.y, man.height //2), 6, (0,0,0), facing))
+            bullets.append(projectile(round(man.x + man.width //2), round(man.y + man.height //2), 6, (0,0,0), facing))
 
     #Moves
     if keys[pygame.K_LEFT] and man.x > man.vel:
