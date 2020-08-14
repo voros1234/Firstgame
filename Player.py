@@ -1,3 +1,5 @@
+import pygame
+
 class player(object):
     def __init__(self, x, y, width, height):
         self.x = x
@@ -11,6 +13,7 @@ class player(object):
         self.right = False
         self.walkCount = 0
         self.standing = True
+        self.hitbox = (self.x + 17, self.y + 11, 29, 52)
 
     def draw(self, win, walkRight, walkLeft, char):
         if self.walkCount + 1 >= 27:
@@ -28,3 +31,5 @@ class player(object):
                 win.blit(walkRight[0], (self.x, self.y))
             else:
                 win.blit(walkLeft[0], (self.x, self.y))
+        self.hitbox = (self.x + 17, self.y + 11, 29, 52)
+        pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)        
