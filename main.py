@@ -20,8 +20,12 @@ char = pygame.image.load('images/standing.png')
 
 clock = pygame.time.Clock()
 
+score = 0
+
 def redrawGameWindow():
     win.blit(bg, (0,0))
+    text = font.render('Score: ' + str(score), 1, (0,0,0))
+    win.blit(text, (390, 10))
     man.draw(win, walkRight, walkLeft, char)
     goblin.draw(win)
     for bullet in bullets:
@@ -32,6 +36,7 @@ man = player(300, 410, 64, 64)
 goblin = enemy(100, 410, 64, 64, 450)
 shootLoop = 0
 #Game loop
+font = pygame.font.SysFont('comicsans', 30, True)
 running = True
 bullets = []
 while running:
@@ -52,6 +57,7 @@ while running:
         if bullet.y - bullet.radius < goblin.hitbox[1] + goblin.hitbox[3] and bullet.y + bullet.radius > goblin.hitbox[1]:
             if bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]:
                 goblin.hit()
+                score += 1
                 bullets.pop(bullets.index(bullet))
 
         if bullet.x < 500 and bullet.x > 0:
